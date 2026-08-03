@@ -6,39 +6,54 @@ class Games:
 
             {
                 "name": "The Elder Scrolls III: Morrowind",
+
                 "launcher": "steam",
-                "appid": "22320",
-                "icon": "morrowind.png"
+
+                "appid": 22320,
+
+                "profile": "morrowind",
+
+                "image": "morrowind.png"
+            },
+
+            {
+                "name": "Grand Theft Auto: San Andreas",
+
+                "launcher": "steam",
+
+                "appid": 12120,
+
+                "profile": "gta_sa",
+
+                "image": "gta_sa.png"
+            },
+
+            {
+                "name": "Minecraft PE",
+                "launcher": "android",
+                "apk": "/home/a/PycharmProjects/PythonProject/consoleos/gameskonsoleos/Minecraft-PocketEdition_0.14.0.apk"
             }
+
+
+
+
 
         ]
 
-    # --------------------------
+    # ---------------------------------
 
-    def count(self):
+    def all(self):
 
-        return len(self.games)
+        return self.games
 
-    # --------------------------
+    # ---------------------------------
 
     def get(self, index):
 
         return self.games[index]
 
-    # --------------------------
+    # ---------------------------------
 
-    def names(self):
+    def count(self):
 
-        return [game["name"] for game in self.games]
-
-    # --------------------------
-
-    def add(self, game):
-
-        self.games.append(game)
-
-    # --------------------------
-
-    def remove(self, index):
-
-        del self.games[index]
+        return len(self.games)

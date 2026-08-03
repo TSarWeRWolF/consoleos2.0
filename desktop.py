@@ -8,12 +8,25 @@ from animation import Animation
 from controller import Controller
 from menu import Menu
 from library import Library
+from browser import Browser
 
 class ConsoleDesktop:
 
-    def draw_library(self):
+    def game_finished(self):
 
-        game = self.library.current()
+        self.game_running = False
+        self.game_running = True
+        print("Игра запущена, меню заблокировано")
+
+        self.library.launch()
+
+
+        print("Игра закрыта, меню разблокировано")
+        self.game_running = False
+
+
+
+    def draw_library(self):
 
         self.canvas.create_text(
             120,
@@ -24,18 +37,32 @@ class ConsoleDesktop:
             anchor="w"
         )
 
-        self.canvas.create_text(
-            120,
-            240,
-            text=game["name"],
-            fill="#00BFFF",
-            font=("Arial", 22),
-            anchor="w"
-        )
+        y = 240
+
+        for i in range(self.library.games.count()):
+
+            game = self.library.games.get(i)
+
+            color = "white"
+
+            if i == self.library.selected:
+                color = "#00BFFF"
+
+            self.canvas.create_text(
+                120,
+                y,
+                text=game["name"],
+                fill=color,
+                font=("Arial", 22),
+                anchor="w"
+            )
+
+            y += 45
 
 
     def __init__(self):
 
+        self.browser = Browser()
         # Анимация
         self.animation = Animation()
 
@@ -43,11 +70,17 @@ class ConsoleDesktop:
         self.assets = "/home/a/PycharmProjects/PythonProject/consoleos/asetsconsoke"
 
         # Меню
+        # Меню
         self.menu = Menu()
-        self.library = Library()
+
         # Геймпад
         self.controller = Controller()
+
+        # Библиотека
+        self.library = Library()
+
         self.last_input = 0
+        self.game_running = False
 
         # Окно
         self.window = tk.Tk()
@@ -82,6 +115,14 @@ class ConsoleDesktop:
         self.games_icon = Image.open(
             os.path.join(self.assets, "games.png")
         )
+
+        self.browser_icon = Image.open(
+            os.path.join(self.assets, "browser.png")
+        )
+
+        self.browser_icon = self.browser_icon.resize((64, 64))
+
+        self.browser_icon = ImageTk.PhotoImage(self.browser_icon)
 
         self.home_icon = self.home_icon.resize((64, 64))
         self.games_icon = self.games_icon.resize((64, 64))
@@ -165,6 +206,27 @@ class ConsoleDesktop:
             anchor="w"
         )
 
+        x = 560 + self.animation.get_offset(2)
+
+        color = "#00BFFF" if self.menu.selected == 2 else "white"
+
+        self.canvas.create_image(
+            x,
+            55,
+            image=self.browser_icon
+        )
+
+        self.canvas.create_text(
+            x + 50,
+            55,
+            text="BROWSER",
+            fill=color,
+            font=("Arial", 22, "bold"),
+            anchor="w"
+        )
+
+
+
         x = 320 + self.animation.get_offset(1)
 
         color = "#00BFFF" if self.menu.selected == 1 else "white"
@@ -191,7 +253,8 @@ class ConsoleDesktop:
     def update(self):
 
         # Обновление геймпада
-        self.controller.update()
+        if not self.game_running:
+            self.controller.update()
 
         # Обновление анимации
         self.animation.update()
@@ -199,7 +262,7 @@ class ConsoleDesktop:
         current_time = time.time()
 
         # Задержка между нажатиями
-        if current_time - self.last_input > 0.2:
+        if not self.game_running and current_time - self.last_input > 0.2:
 
             if self.controller.left():
                 self.left()
@@ -209,10 +272,28 @@ class ConsoleDesktop:
                 self.right()
                 self.last_input = current_time
 
+            # Переключение игр
+            elif self.menu.selected == 1 and self.controller.up():
+
+                self.library.previous()
+                self.last_input = current_time
+
+            elif self.menu.selected == 1 and self.controller.down():
+
+                self.library.next()
+                self.last_input = current_time
+
+
+
+
+
             # Запуск игры
             elif self.menu.selected == 1 and self.controller.button_a():
 
+                self.game_running = True
+
                 self.library.launch()
+
                 self.last_input = current_time
 
         # Очистка экрана
@@ -239,3 +320,8 @@ class ConsoleDesktop:
 
         self.update()
         self.window.mainloop()
+
+
+
+
+

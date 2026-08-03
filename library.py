@@ -11,12 +11,14 @@ class Library:
 
         self.selected = 0
 
+
     # -------------------------
 
     def next(self):
 
         if self.selected < self.games.count() - 1:
             self.selected += 1
+
 
     # -------------------------
 
@@ -25,11 +27,13 @@ class Library:
         if self.selected > 0:
             self.selected -= 1
 
+
     # -------------------------
 
     def current(self):
 
         return self.games.get(self.selected)
+
 
     # -------------------------
 
@@ -39,6 +43,27 @@ class Library:
 
         if game["launcher"] == "steam":
 
-            self.launcher.launch_steam(
+            return self.launcher.launch_steam(
                 game["appid"]
+            )
+
+
+        elif game["launcher"] == "wine":
+
+            return self.launcher.launch_wine(
+                game["path"]
+            )
+
+
+        elif game["launcher"] == "linux":
+
+            return self.launcher.launch_linux(
+                game["path"]
+            )
+
+
+        elif game["launcher"] == "android":
+
+            return self.launcher.launch_android(
+                game["apk"]
             )

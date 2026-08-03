@@ -1,11 +1,13 @@
-
 import subprocess
+
+from androidmode.android_manager import AndroidManager
 
 
 class Launcher:
 
     def __init__(self):
-        pass
+        self.android = AndroidManager()
+
 
     # -----------------------------
 
@@ -14,6 +16,7 @@ class Launcher:
         return subprocess.Popen(
             [path]
         )
+
 
     # -----------------------------
 
@@ -26,6 +29,7 @@ class Launcher:
             ]
         )
 
+
     # -----------------------------
 
     def launch_steam(self, appid):
@@ -37,3 +41,14 @@ class Launcher:
             ]
         )
 
+
+    # -----------------------------
+
+    def launch_android(self, apk):
+        print("Android игра:", apk)
+
+        self.android.start_android()
+
+        self.android.install_apk(apk)
+
+        return None

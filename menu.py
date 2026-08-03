@@ -10,10 +10,15 @@ class Menu:
             {
                 "name": "GAMES",
                 "icon": "games.png"
+            },
+            {
+                "name": "BROWSER",
+                "icon": "browser.png"
             }
         ]
 
         self.selected = 0
+
 
     # ------------------------
 
@@ -22,6 +27,7 @@ class Menu:
         if self.selected > 0:
             self.selected -= 1
 
+
     # ------------------------
 
     def right(self):
@@ -29,11 +35,13 @@ class Menu:
         if self.selected < len(self.items) - 1:
             self.selected += 1
 
+
     # ------------------------
 
     def current(self):
 
         return self.items[self.selected]
+
 
     # ------------------------
 
